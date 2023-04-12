@@ -2,7 +2,13 @@
 
 INSTALLATIONS PROCESS:
 
-git clone "https://github.com/gamkers/Hadoop-Port-Discovery-Tool"
+git clone "https://github.com/gamkers/Hadoop-Port-Discovery-Tool.git"
+
+cd Hadoop-Port-Discovery
+
+chmod +x hadooports.sh
+
+./hadooports.sh -h
 
 
 NAME
