@@ -12,17 +12,20 @@ SYNOPSIS
 DESCRIPTION
        Concatenate FILE(s), or standard input, to standard output.
        
-       -r, --run
+       -r,   --run
               to start the program
 
-       -p, --process
+       -p,   --process
               list out all the process
 
-       -O, --output
+       -O,   --output
               stores the output
 
-       -pp, --privious-port
+       -pp,  --privious-port
               display the privious port
+         
+       -gui, --graphical-interface
+              open a graphical interface in browser
 
 
 AUTHOR
@@ -38,7 +41,11 @@ COPYRIGHT
        There is NO WARRANTY, to the extent permitted by law.
 
 CREATED 
-      Created on 12-04-2023:12:34
+       Created on 12-04-2023:12:34
+
+CONTRIBUTE
+       Contribute here <https://github.com/gamkers/Hadoop-Port-Discovery-Tool>
+
 
 DOCUMENTATIONXX
 exit $DOC_REQUEST
@@ -86,6 +93,22 @@ then
 portnum=$(sudo jps | grep $(cat port.txt) | cut -d " " -f 1)
 echo "$(cat port.txt)"
 sudo netstat -nputl | grep "$portnum"
+
+elif [ "$1" = "-gui"  -o "$1" = "--graphical-interface" ]     # Request help.
+then
+array=($(sudo jps | cut -d " " -f 2))
+for (( i= 0; i < ${#array[@]}; ++i)); do
+position=$(($i+1))
+echo "$position)${array[$i]}"
+echo "${array[$i]}" >> names.txt
+done
+read -p "Specify the Process Number? " process
+cat names.txt| head -n$process | tail -n 1 > port.txt
+portnum=$(sudo jps | grep $(cat port.txt) | cut -d " " -f 1)
+echo "$(cat port.txt)"
+sudo netstat -nputl | grep "$portnum"| tee o.txt
+xdg-open "http://$(cat o.txt |grep tcp |  cut -d " " -f 16| grep 0.0.0.0 | tail -n 1)"
+rm names.txt
 
 elif [ "$1" != "-r"  -o "$1" != "--run" -o "$1" != "-o"  -o "$1" != "--output" -o "$1" != "-p"  -o "$1" != "--process" -o  "$1" != "-pp"  -o "$1" != "--previous" ] 
 then
